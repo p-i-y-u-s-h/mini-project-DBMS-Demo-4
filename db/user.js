@@ -13,8 +13,22 @@ const userSchema = new Schema({
     },
     password : {
         type : String
-    }
-});
+    },
+    profilePicture:{
+        type:String,
+        default:""
+    },
+    followers:{
+        type:Array,
+        default:[]
+    },
+    following:{
+        type:Array,
+        default:[]
+    },
+},
+{timestamps:true}
+);
 
 const userModel = mongoose.model("user",userSchema);
 
