@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const userRouter = Router();
 
 userRouter.post("/signup",async(req,res)=>{
+    try{
     const {userName,email,password} = req.body;
 
     const salt = await bcrypt.genSalt(10);
@@ -21,10 +22,15 @@ userRouter.post("/signup",async(req,res)=>{
     res.json({
         message:"Signup succeeded"
     })
+    } catch(err){
+        res.status(500).json(err);
+    }
+    
 
 });
 
 userRouter.post("/signin",async (req,res)=>{
+    try{
     const {email,password} = req.body;
 
     const user = await userModel.findOne({
@@ -53,6 +59,10 @@ userRouter.post("/signin",async (req,res)=>{
             message:"Incorrect credentials"
         })
     }
+    } catch(err){
+        res.status(500).json(err);
+    }
+    
 });
 
 module.exports = {
