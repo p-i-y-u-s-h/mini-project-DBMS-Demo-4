@@ -46,7 +46,7 @@ authUserRouter.post("/signin",async (req,res)=>{
 
     if(user){
         const token = jwt.sign({
-            id:user._id
+            userId:user._id
         },JWT_PASSWORD)
     
         res.status(200).json({

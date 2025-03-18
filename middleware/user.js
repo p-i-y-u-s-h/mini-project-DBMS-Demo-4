@@ -1,20 +1,25 @@
 const jwt = require("jsonwebtoken");
-const {JWT_PASSWORD} = require("../config");
+const { JWT_PASSWORD } = require("../config");
 
-function userMiddleware(req,res,next){
-    const token = req.headers.token;
-    const decoded = jwt.verify(token,JWT_PASSWORD)
+function userMiddleware(req, res, next) {
+    try {
+        const token = req.headers.authtoken;
 
-    if(decoded){
-        req.userId = decoded.indexOf;
-        next()
-    } else{
-        res.status(403).json({
-            message:"You are not singnrd in"
-        })
+        if (!token) {
+            return res.status(401).json({ message: "No authentication token provided" });
+        }
+
+        const decoded = jwt.verify(token, JWT_PASSWORD);
+
+        if (!decoded || !decoded.userId) {
+            return res.status(403).json({ message: "Invalid token" });
+        }
+
+        req.userId = decoded.userId;
+        next();
+    } catch (err) {
+        return res.status(403).json({ message: "Authentication failed", error: err.message });
     }
 }
 
-module.exports = {
-    userMiddleware:userMiddleware
-}
+module.exports = { userMiddleware };
